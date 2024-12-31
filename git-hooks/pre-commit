@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+# Copyright (c) 2024, 2025 acrion innovations GmbH
+# Authors: Stefan Zipproth, s.zipproth@acrion.ch
+#
+# This file is part of ditana-config-xfce, see https://github.com/acrion/ditana-config-xfce
+#
+# ditana-config-xfce is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ditana-config-xfce is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with ditana-config-xfce. If not, see <https://www.gnu.org/licenses/>.
+
+TEMP_FILE="$(mktemp)"
+
+git ls-files | while IFS= read -r file; do
+
+    if [[ -f "$file" ]]; then
+        mode="$(stat -c "%a" "$file")"
+        echo -e "F\t$file\t$mode"
+    fi
+
+    dir="$(dirname "$file")"
+    if [[ -d "$dir" && "$dir" != "." ]]; then
+        dirmode="$(stat -c "%a" "$dir")"
+        echo -e "D\t$dir\t$dirmode"
+    fi
+
+done | sort -u > "$TEMP_FILE"
+
+mv "$TEMP_FILE" .git_file_permissions
+
+git add .git_file_permissions
+
+exit 0

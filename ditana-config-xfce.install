@@ -1,0 +1,105 @@
+# Copyright (c) 2024, 2025 acrion innovations GmbH
+# Authors: Stefan Zipproth, s.zipproth@acrion.ch
+#
+# This file is part of ditana-config-xfce, see https://github.com/acrion/ditana-config-xfce
+#
+# ditana-config-xfce is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# ditana-config-xfce is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with ditana-config-xfce. If not, see <https://www.gnu.org/licenses/>.
+
+command_exists() {
+    if command -v "$1" >/dev/null 2>&1; then
+        echo "Command $1 exists" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        return 0
+    else
+        echo "Command $1 does not exist" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        return 1
+    fi
+}
+
+post_install_or_upgrade() {
+    # use identifier '# DITANA # ' prior comments to safely remove these before appending a new version
+    sed -i '/^# DITANA # /d; /^TERMINAL=/d; /^QT_AUTO_SCREEN_SCALE_FACTOR=/d; /^QT_ENABLE_HIGHDPI_SCALING=/d; /^GTK_THEME=/d' /etc/environment
+
+    cat <<EOF >> /etc/environment
+# DITANA # https://wiki.archlinux.org/title/HiDPI#Qt_5
+# DITANA # https://doc.qt.io/qt-5/highdpi.html
+QT_AUTO_SCREEN_SCALE_FACTOR=1
+QT_ENABLE_HIGHDPI_SCALING=1
+
+# DITANA # This global variable serves as a fallback mechanism. It addresses the issue where
+# DITANA # the 'gsettings set org.gnome.desktop.interface gtk-theme "Dracula"' command does not
+# DITANA # affect certain applications under XFCE, such as pamac and nautilus. Setting GTK_THEME
+# DITANA # ensures consistent application of the 'Dracula' theme across all interfaces.
+GTK_THEME=Dracula
+EOF
+
+    echo "Modifying /usr/share/applications/mimeapps.list" | tee >(systemd-cat -t ditana-config-xfce -p info)
+    if [[ -f /usr/share/applications/mimeapps.list ]]; then
+        echo "mimeapps.list exists, modifying" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        sed -i '/text\/plain=/d' /usr/share/applications/mimeapps.list
+
+        if command_exists code; then
+            echo "text/plain=code.desktop" >> /usr/share/applications/mimeapps.list
+            echo "Added code.desktop as text/plain handler" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        elif command_exists micro; then
+            echo "text/plain=micro.desktop" >> /usr/share/applications/mimeapps.list
+            echo "Added micro.desktop as text/plain handler" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        elif command_exists nvim; then
+            echo "text/plain=nvim.desktop" >> /usr/share/applications/mimeapps.list
+            echo "Added nvim.desktop as text/plain handler" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        elif command_exists vim; then
+            echo "text/plain=vim.desktop" >> /usr/share/applications/mimeapps.list
+            echo "Added vim.desktop as text/plain handler" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        else
+            echo "No suitable text editor found" | tee >(systemd-cat -t ditana-config-xfce -p info)
+        fi
+    else
+        echo "mimeapps.list does not exist" | tee >(systemd-cat -t ditana-config-xfce -p info)
+    fi
+
+    echo "Finished post_install_or_upgrade" | tee >(systemd-cat -t ditana-config-xfce -p debug)
+}
+
+post_install() {
+    systemctl daemon-reload | tee >(systemd-cat -t ditana-config-xfce -p debug) 2>&1
+    systemctl enable lightdm.service | tee >(systemd-cat -t ditana-config-xfce -p debug) 2>&1
+
+    if ! grep -q '^greeter-session=lightdm-slick-greeter' /etc/lightdm/lightdm.conf; then
+        sed -i 's/^#*\s*greeter-session=.*$/greeter-session=lightdm-slick-greeter/' /etc/lightdm/lightdm.conf
+    fi
+
+    if lspci -nn | grep -i 'vga.*nvidia' &> /dev/null; then
+        cat << 'EOF' > /etc/profile.d/ditana-disable-dmabuf-for-webkit.sh
+# This script disables the DMA-BUF renderer for WebKitGTK applications
+# on systems with NVIDIA graphics cards. The issue affects both proprietary
+# and open-source NVIDIA drivers, causing rendering problems. Disabling DMA-BUF
+# forces WebKit to use software rendering for stability.
+export WEBKIT_DISABLE_DMABUF_RENDERER=1
+EOF
+    fi
+
+    post_install_or_upgrade
+}
+
+post_upgrade() {
+    systemctl daemon-reload | tee >(systemd-cat -t ditana-config-xfce -p debug) 2>&1
+    post_install_or_upgrade
+}
+
+pre_remove() {
+    systemctl disable lightdm.service | tee >(systemd-cat -t ditana-config-xfce -p debug) 2>&1
+}
+
+post_remove() {
+    systemctl daemon-reload | tee >(systemd-cat -t ditana-config-xfce -p debug) 2>&1
+}

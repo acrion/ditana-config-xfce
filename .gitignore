@@ -1,0 +1,5 @@
+pkg
+src
+*.zst
+*.zst.sig
+folders.tar.gz

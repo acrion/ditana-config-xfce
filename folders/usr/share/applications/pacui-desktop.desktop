@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Add/Remove Software
+GenericName=Package Manager
+Comment=Manage packages with PacUI
+TryExec=kitty
+StartupNotify=true
+Exec=kitty -e pacui
+Icon=system-software-install
+Categories=System;Utility;
