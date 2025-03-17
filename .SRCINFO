@@ -1,6 +1,6 @@
 pkgbase = ditana-config-xfce
 	pkgdesc = Ditana XFCE config
-	pkgver = 2.084
+	pkgver = 2.085
 	pkgrel = 1
 	url = https://github.com/acrion/ditana-config-xfce
 	install = ditana-config-xfce.install
@@ -39,6 +39,9 @@ pkgbase = ditana-config-xfce
 	depends = mugshot
 	depends = gnome-keyring
 	depends = noto-fonts
+	depends = noto-fonts-cjk
+	depends = noto-fonts-extra
+	depends = noto-fonts-emoji
 	depends = seahorse
 	depends = libgepub
 	depends = libopenraw

@@ -1,7 +1,7 @@
 # Maintainer: Stefan Zipproth <s.zipproth@ditana.org>
 
 pkgname=ditana-config-xfce
-pkgver=2.084
+pkgver=2.085
 pkgrel=1
 pkgdesc="Ditana XFCE config"
 arch=(any)
@@ -66,6 +66,9 @@ depends=(
     # This choice replaces the default XFCE font, as Noto offers superior internationalization support
     # and consistent rendering across different languages, enhancing accessibility and user experience.
     noto-fonts
+    noto-fonts-cjk # Chinese, Japanese, Korean
+    noto-fonts-extra # extended selection of font weights and styles
+    noto-fonts-emoji
 
     # A graphical interface for managing GPG, SSH, and system login keys, as well as cryptographic trust settings
     seahorse
