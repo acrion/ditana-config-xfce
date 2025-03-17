@@ -1,7 +1,7 @@
 # Maintainer: Stefan Zipproth <s.zipproth@ditana.org>
 
 pkgname=ditana-config-xfce
-pkgver=2.083
+pkgver=2.084
 pkgrel=1
 pkgdesc="Ditana XFCE config"
 arch=(any)
@@ -101,6 +101,9 @@ depends=(
 
     # audio
     xfce4-pulseaudio-plugin pavucontrol
+
+    # Graphical Bluetooth Manager
+    blueman
 
     # Tray icon to manage Wifi connections
     network-manager-applet

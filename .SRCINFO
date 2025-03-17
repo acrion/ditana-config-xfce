@@ -1,6 +1,6 @@
 pkgbase = ditana-config-xfce
 	pkgdesc = Ditana XFCE config
-	pkgver = 2.083
+	pkgver = 2.084
 	pkgrel = 1
 	url = https://github.com/acrion/ditana-config-xfce
 	install = ditana-config-xfce.install
@@ -65,6 +65,7 @@ pkgbase = ditana-config-xfce
 	depends = xfce4-xkb-plugin
 	depends = xfce4-pulseaudio-plugin
 	depends = pavucontrol
+	depends = blueman
 	depends = network-manager-applet
 	depends = ditana-config-kitty
 	depends = ristretto
