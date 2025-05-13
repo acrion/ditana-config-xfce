@@ -1,6 +1,6 @@
 pkgbase = ditana-config-xfce
 	pkgdesc = Ditana XFCE config
-	pkgver = 2.085
+	pkgver = 2.091
 	pkgrel = 1
 	url = https://github.com/acrion/ditana-config-xfce
 	install = ditana-config-xfce.install
@@ -75,7 +75,8 @@ pkgbase = ditana-config-xfce
 	depends = vlc
 	depends = xreader
 	depends = arch-audit-gtk
-	depends = chromium
+	depends = librewolf
+	depends = speech-dispatcher
 	depends = mesa-utils
 	depends = libva-utils
 	depends = intel-gpu-tools
@@ -87,6 +88,7 @@ pkgbase = ditana-config-xfce
 	depends = gpick
 	depends = pciutils
 	optdepends = xfce-wallpaper-overlay: used to overlay the desktop background with a Ditana cheat sheet
+	optdepends = chromium: alternative web browser that was previously the default
 	source = file:///media/stefan/data/Documents/git/my-projects/acrion/ditana/packages/002-ditana-config-xfce/folders.tar.gz
 	sha256sums = SKIP
 

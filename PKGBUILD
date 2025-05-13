@@ -1,7 +1,7 @@
 # Maintainer: Stefan Zipproth <s.zipproth@ditana.org>
 
 pkgname=ditana-config-xfce
-pkgver=2.085
+pkgver=2.091
 pkgrel=1
 pkgdesc="Ditana XFCE config"
 arch=(any)
@@ -124,7 +124,7 @@ depends=(
     arch-audit-gtk
 
     # Browser
-    chromium
+    librewolf speech-dispatcher
 
     # https://www.mesa3d.org
     # This provides e. g. glxinfo
@@ -164,7 +164,10 @@ depends=(
 
     pciutils # ditana-config-xfce.install makes use of lspci
 )
-optdepends=('xfce-wallpaper-overlay: used to overlay the desktop background with a Ditana cheat sheet')
+optdepends=(
+    'xfce-wallpaper-overlay: used to overlay the desktop background with a Ditana cheat sheet'
+    'chromium: alternative web browser that was previously the default'
+)
 makedepends=(rsync)
 source=("file://${PWD}/folders.tar.gz")
 sha256sums=('SKIP')

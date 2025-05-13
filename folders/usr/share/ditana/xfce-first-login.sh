@@ -121,6 +121,7 @@ LOG_PATH="$HOME/.ditana/xfce-first-login.log"
     gsettings set org.gnome.desktop.default-applications.terminal exec-arg '-e'
 
     trust_link "$XDG_DESKTOP_DIR/Donate to Ditana.desktop"
+    trust_link "$XDG_DESKTOP_DIR/Best Practices.desktop"
 
     if [[ -f /usr/share/applications/koboldcpp.desktop ]]; then
         cp /usr/share/applications/koboldcpp.desktop "$XDG_DESKTOP_DIR/koboldcpp.desktop"
@@ -132,7 +133,7 @@ LOG_PATH="$HOME/.ditana/xfce-first-login.log"
     # Workaround for gnome-keyring initialization issue on first login
     # This restarts the gnome-keyring-daemon to ensure proper initialization
     # The user will still need to unlock the keyring via a dialog, but this prevents
-    # tools like secret-tool from freezing and allows Chromium to start properly
+    # tools like secret-tool from freezing and allows the browser to start properly
     # For more information, see: https://gitlab.gnome.org/GNOME/gnome-keyring/-/issues/116
     systemctl --user restart gnome-keyring-daemon.service
 

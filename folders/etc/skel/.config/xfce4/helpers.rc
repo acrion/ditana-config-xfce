@@ -1,5 +1,5 @@
 TerminalEmulator=kitty
 FileManager=thunar
-WebBrowser=chromium
+WebBrowser=librewolf
 MailReader=custom-MailReader
 

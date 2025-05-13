@@ -67,6 +67,13 @@ EOF
         echo "mimeapps.list does not exist" | tee >(systemd-cat -t ditana-config-xfce -p info)
     fi
 
+    if [[ -f /usr/lib/librewolf/distribution/policies.json ]]; then
+        # Set Startpage.com as default search engine in LibreWolf
+        sed -i 's/"Default": *"[^"]*"/"Default": "StartPage"/g' /usr/lib/librewolf/distribution/policies.json
+        # Preserve Google search engine as an optional choice for users
+        sed -i '/\s*"Remove": \[/,/\s*\]/{ /\s*"Google",/d }' /usr/lib/librewolf/distribution/policies.json
+    fi
+
     echo "Finished post_install_or_upgrade" | tee >(systemd-cat -t ditana-config-xfce -p debug)
 }
 
@@ -79,12 +86,23 @@ post_install() {
     fi
 
     if lspci -nn | grep -i 'vga.*nvidia' &> /dev/null; then
+        # Create profile.d script for login shells
         cat << 'EOF' > /etc/profile.d/ditana-disable-dmabuf-for-webkit.sh
 # This script disables the DMA-BUF renderer for WebKitGTK applications
 # on systems with NVIDIA graphics cards. The issue affects both proprietary
 # and open-source NVIDIA drivers, causing rendering problems. Disabling DMA-BUF
 # forces WebKit to use software rendering for stability.
 export WEBKIT_DISABLE_DMABUF_RENDERER=1
+EOF
+
+        # Create environment.d file for all systemd-managed sessions (including graphical)
+        mkdir -p /etc/environment.d
+        cat << 'EOF' > /etc/environment.d/50-ditana-disable-dmabuf-for-webkit.conf
+# This setting disables the DMA-BUF renderer for WebKitGTK applications
+# on systems with NVIDIA graphics cards. The issue affects both proprietary
+# and open-source NVIDIA drivers, causing rendering problems. Disabling DMA-BUF
+# forces WebKit to use software rendering for stability.
+WEBKIT_DISABLE_DMABUF_RENDERER=1
 EOF
     fi
 

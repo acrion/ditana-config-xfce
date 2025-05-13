@@ -27,7 +27,9 @@ shopt -s dotglob
         PINNED_APPS_FRONT="ditana-assistant;"
     fi
 
-    if pacman -Qi chromium &> /dev/null; then
+    if pacman -Qi librewolf &> /dev/null; then
+        PINNED_APPS_FRONT+="librewolf;"
+    elif pacman -Qi chromium &> /dev/null; then
         PINNED_APPS_FRONT+="chromium;"
     elif pacman -Qi floorp &> /dev/null; then
         PINNED_APPS_FRONT+="floorp;"
